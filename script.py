@@ -17,12 +17,12 @@ class gauss:
             for row in readerA:
                 self.A.append([])
                 for elem in row:
-                    self.A[i].append(int(elem))
+                    self.A[i].append(float(elem))
                 i += 1
         with open('B.csv', newline='') as csvfile:
             readerB = csv.reader(csvfile, delimiter=' ')
             for row in readerB:
-                self.B.append(int(row[0]))
+                self.B.append(float(row[0]))
     # ^^^ def __init__
 
     def solve(self):
@@ -58,19 +58,17 @@ class gauss:
         except MyError as e:
             print(e.message)
             return False
-        # if A[0][0] is zero, swap lines
-        if self.A[0][0] == 0:
-            for i in range(1, len(self.A)):
-                if self.A[i][0] != 0:
-                    print('Внимание: A[0][0]=0. A[0] и A[' + str(i) + '] переставлены.')
-                    self.A[0], self.A[i] = self.A[i], self.A[0]
-                    self.B[0], self.B[i] = self.B[i], self.B[0]
-                    break
         return True
-
     # ^^^ def check
+
     def straight(self, n):
         for k in range(0, n-1):
+            if self.A[k][k] == 0:
+                for i in range(k+1, n):
+                    if self.A[i][k] != 0:
+                        self.A[i], self.A[k] = self.A[k], self.A[i]
+                        self.B[i], self.B[k] = self.B[k], self.B[i]
+                        break
             for i in range(k+1, n):
                 t = self.A[i][k] / self.A[k][k]
                 self.A[i][k] = 0
